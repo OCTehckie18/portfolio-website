@@ -1,16 +1,47 @@
-# React + Vite
+# Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive terminal-style personal portfolio built with React and Vite.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Terminal-inspired UI with custom commands
+- Animated sections and transitions
+- 3D and visual effects powered by `react-three-fiber` and `three`
+- Theme support and responsive layout
+- Easy personal data editing from a single data file
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Vite
+- Tailwind CSS 4
+- Framer Motion
+- React Three Fiber / Drei
+- React Helmet Async
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+## Scripts
+
+- `npm run dev` - start the development server
+- `npm run build` - build the app for production
+- `npm run lint` - run ESLint
+- `npm run preview` - preview the production build
+
+## Customization
+
+Edit `src/data/portfolioData.js` to update:
+
+- your name, bio, and contact details
+- projects and experience
+- skills, tools, and testimonials
+- article links and other content
+
+## Notes
+
+This project is designed to feel like a developer terminal, so most content is driven from data rather than hard-coded into the UI.
