@@ -95,7 +95,7 @@ export const PROJECTS = [
     desc: 'This very portfolio — a fully interactive terminal-style experience with themes, commands, Easter eggs and routing.',
     tags: ['React', 'Vite', 'Tailwind v4'],
     stats: ['4 themes', '30+ commands', '100% fun'],
-    url: '',
+    url: 'https://github.com/OCTehckie18/portfolio-website.git',
   },
   {
     name: 'CLI Tool',
