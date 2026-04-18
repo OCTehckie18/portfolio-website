@@ -138,7 +138,7 @@ export function buildWork() {
       <div class="project-type">${p.type}</div>
       <div class="project-desc">${p.desc}</div>
       <div class="project-tags">${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}</div>
-      ${p.stats ? `<div class="project-stats">${p.stats.map(s => `<span class="project-stat">✦ ${s}</span>`).join('')}</div>` : ''}
+      ${p.stats ? `<div class="project-stats">${p.stats.map(s => `<span class="project-stat">[*] ${s}</span>`).join('')}</div>` : ''}
       ${p.url ? `<div style="margin-top:8px"><a href="${p.url}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-size:0.8rem;text-decoration:underline">View on GitHub →</a></div>` : ''}
     `;
     container.appendChild(card);
@@ -259,9 +259,9 @@ export function buildContact() {
   container.innerHTML = `
     <div class="output-line heading">Get in Touch</div>
     <div style="height:12px"></div>
-    <div class="output-line">✉  ${_e} <button onclick="navigator.clipboard.writeText('${_e}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--accent); cursor:pointer; font-size:0.8em">Copy</button></div>
-    <div class="output-line">📞  ${OWNER.phone} <button onclick="navigator.clipboard.writeText('${OWNER.phone}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--blue); cursor:pointer; font-size:0.8em">Copy</button></div>
-    <div class="output-line">📍  ${OWNER.location}</div>
+    <div class="output-line">[EMAIL]  ${_e} <button onclick="navigator.clipboard.writeText('${_e}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--accent); cursor:pointer; font-size:0.8em">Copy</button></div>
+    <div class="output-line">[PHONE]  ${OWNER.phone} <button onclick="navigator.clipboard.writeText('${OWNER.phone}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--blue); cursor:pointer; font-size:0.8em">Copy</button></div>
+    <div class="output-line">[LOC]  ${OWNER.location}</div>
     <div style="height:12px"></div>
     <div class="output-line">  Open to: full-time roles, contract work, consulting, open-source collaborations.</div>
     <div style="height:12px"></div>
@@ -446,7 +446,7 @@ export function buildPing() {
     { text: `  64 bytes from ${OWNER.email}: icmp_seq=1 ttl=64 time=0.001ms`, cls: 'green' },
     { text: `  64 bytes from ${OWNER.email}: icmp_seq=2 ttl=64 time=0.001ms`, cls: 'green' },
     { text: '' },
-    { text: `  ✦ Available for new opportunities`, cls: 'accent' },
+    { text: `  [*] Available for new opportunities`, cls: 'accent' },
     { html: `  → <a href="mailto:${OWNER.email}" style="color:var(--accent);text-decoration:underline">Send a message</a>` },
   ];
 }
@@ -464,7 +464,7 @@ export const BOOT_LINES = [
   { text: 'TypeScript errors: 0 ✓', delay: 100 },
   { text: 'Don\'t search for /secrets here...', delay: 80, cls: 'dim' },
   { text: 'Strategic thinking: engaged', delay: 100 },
-  { text: '\n✦ ', delay: 300 },
+  { text: '\n[*] ', delay: 300 },
   { text: OWNER.name.toLowerCase().replace(' ', '.') + ' v' + OWNER.version, delay: 80, cls: 'accent', append: true },
   { text: ' — ready.\n', delay: 200, append: true },
   { text: 'Press Enter to continue...', delay: 100 },

@@ -2,7 +2,7 @@ export function buildRegedit() {
   return [
     { text: 'Registry Editor', cls: 'heading' },
     { text: '' },
-    { text: '  🪟 Windows Registry™ (Parody Edition)', cls: 'accent' },
+    { text: '  >> Windows Registry (Parody Edition)', cls: 'accent' },
     { text: '' },
     { text: 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Omkaar', cls: 'blue' },
     { text: '' },
@@ -18,7 +18,7 @@ export function buildRegedit() {
     { text: '  TimeSpentDebuggin                 REG_SZ     "too.long"', cls: 'dim' },
     { text: '  CodeComments                      REG_SZ     "self-explanatory"', cls: 'dim' },
     { text: '' },
-    { text: '  ⚠️  Warning: Modifying these values may result in', cls: 'yellow' },
+    { text: '  [!] Warning: Modifying these values may result in', cls: 'yellow' },
     { text: '      increased productivity and life satisfaction.', cls: 'yellow' },
     { text: '' },
     { text: '  // This is a joke. Please exit immediately.', cls: 'dim' },
@@ -44,7 +44,7 @@ export function getRandomJoke() {
 
 export function buildDeveloperMode() {
   return [
-    { text: '🔧 DEVELOPER MODE ACTIVATED 🔧', cls: 'heading' },
+    { text: '[DEV] DEVELOPER MODE ACTIVATED [DEV]', cls: 'heading' },
     { text: '' },
     { text: '  Status: Console is watching... always watching.', cls: 'cyan' },
     { text: '  Bugs spawned this session: ' + Math.floor(Math.random() * 47), cls: 'yellow' },

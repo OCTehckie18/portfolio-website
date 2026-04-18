@@ -15,7 +15,7 @@ export function buildQRCode(url) {
       html: `  <img src="${qrcodeUrl}" alt="QR Code" style="image-rendering:pixelated;border:2px solid var(--accent);padding:8px;background:white;margin:8px 0;" />`
     },
     { text: '' },
-    { text: '  💡 Share this QR code or screenshot to share your portfolio!', cls: 'cyan' },
+    { text: '  Share this QR code or screenshot to share your portfolio!', cls: 'cyan' },
     { text: '  Use your phone camera to scan.', cls: 'dim' },
   ];
 }
@@ -34,6 +34,6 @@ export function buildQRCodeSimple() {
     { text: '  ██                          ██', cls: 'cyan' },
     { text: '  ██████████████████████████████', cls: 'cyan' },
     { text: '' },
-    { text: '  Share your portfolio with a single scan! 📱', cls: 'accent' },
+    { text: '  Share your portfolio with a single scan!', cls: 'accent' },
   ];
 }

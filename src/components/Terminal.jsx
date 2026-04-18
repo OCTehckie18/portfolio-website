@@ -41,7 +41,10 @@ import {
   BOOT_LINES,
 } from "../data/commands.js";
 import { buildStats } from "../data/stats-builder.js";
-import { checkAchievements, getAchievementDisplay } from "../data/achievements.js";
+import {
+  checkAchievements,
+  getAchievementDisplay,
+} from "../data/achievements.js";
 import { buildRegedit, buildDeveloperMode } from "../data/easter-eggs.js";
 import { buildQRCodeSimple } from "../data/qr-code-builder.js";
 
@@ -359,12 +362,17 @@ export default function Terminal() {
 
   // Check for achievement unlocks
   useEffect(() => {
-    const newAchievements = checkAchievements(cmdCount, commandCounts, aiConversation, achievements);
-    newAchievements.forEach(achievement => {
+    const newAchievements = checkAchievements(
+      cmdCount,
+      commandCounts,
+      aiConversation,
+      achievements,
+    );
+    newAchievements.forEach((achievement) => {
       if (!achievements.includes(achievement)) {
         const display = getAchievementDisplay(achievement);
         if (display) {
-          addSystemMessage(`  ✨ ${display.icon} ${display.name}`);
+          addSystemMessage(`  [ACHIEVEMENT] ${display.icon} ${display.name}`);
         }
       }
     });
@@ -482,20 +490,21 @@ export default function Terminal() {
     setAiLoading(true);
 
     const portfolioContext = buildPortfolioContext();
-    
+
     // Build conversation history for context
     const conversationHistory = aiConversation.slice(-4); // Last 4 messages for context
     const systemMessage = `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}`;
-    
+
     const messages = [
       { role: "system", content: systemMessage },
       ...conversationHistory,
-      { role: "user", content: prompt }
+      { role: "user", content: prompt },
     ];
-    
-    const contextualPrompt = conversationHistory.length > 0 
-      ? messages.map(m => `${m.role}: ${m.content}`).join('\n\n')
-      : `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}\n\nUser question: ${prompt}`;
+
+    const contextualPrompt =
+      conversationHistory.length > 0
+        ? messages.map((m) => `${m.role}: ${m.content}`).join("\n\n")
+        : `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}\n\nUser question: ${prompt}`;
 
     const ollamaUrl =
       import.meta.env.VITE_OLLAMA_URL || "http://localhost:11434";
@@ -602,9 +611,13 @@ export default function Terminal() {
       }
 
       // Update conversation history with the exchange
-      const updatedConversation = [...aiConversation, { role: "user", content: prompt }, { role: "assistant", content: reply }];
+      const updatedConversation = [
+        ...aiConversation,
+        { role: "user", content: prompt },
+        { role: "assistant", content: reply },
+      ];
       setAiConversation(updatedConversation);
-      
+
       return reply || "No response received.";
     } catch (err) {
       const errMsg = err?.message || "Failed to contact AI provider.";
@@ -623,13 +636,13 @@ export default function Terminal() {
     const resolved = ALIASES[cmd] || cmd;
     const newCount = cmdCount + 1;
     setCmdCount(newCount);
-    
+
     // Track command usage for /stats
-    setCommandCounts(prev => ({
+    setCommandCounts((prev) => ({
       ...prev,
-      [resolved]: (prev[resolved] || 0) + 1
+      [resolved]: (prev[resolved] || 0) + 1,
     }));
-    
+
     if (newCount === 3)
       addSystemMessage(
         "  You've run 3 commands. There are more hiding beneath the surface.",
@@ -657,7 +670,7 @@ export default function Terminal() {
           { text: "  AI chat mode enabled and question sent.", cls: "accent" },
         ]);
         // Show animated loading
-        const dots = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        const dots = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
         let dotIdx = 0;
         const loadingId = Date.now();
         addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
@@ -665,7 +678,7 @@ export default function Terminal() {
           dotIdx = (dotIdx + 1) % dots.length;
           addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
         }, 100);
-        
+
         const aiResponse = await callOpenAI(after);
         clearInterval(interval);
         addOutput(null, [{ text: aiResponse, cls: "green" }]);
@@ -700,7 +713,7 @@ export default function Terminal() {
       addOutput(raw, [{ cls: "dim" }]);
 
       // Show animated loading
-      const dots = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+      const dots = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
       let dotIdx = 0;
       addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
       const interval = setInterval(() => {
@@ -790,10 +803,14 @@ export default function Terminal() {
       return;
     }
     if (resolved === "/voice") {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
         addOutput(raw, [
-          { text: "  ❌ Voice commands not supported in your browser.", cls: "red" },
+          {
+            text: "  ❌ Voice commands not supported in your browser.",
+            cls: "red",
+          },
           { text: "  Try Chrome, Edge, or Safari.", cls: "dim" },
         ]);
         return;
@@ -807,7 +824,10 @@ export default function Terminal() {
       setVoiceActive(true);
       voiceRecognitionRef.current.start();
       addOutput(raw, [
-        { text: "  🎤 Listening... Say a command like 'help', 'about', 'contact', etc.", cls: "accent" },
+        {
+          text: "  🎤 Listening... Say a command like 'help', 'about', 'contact', etc.",
+          cls: "accent",
+        },
         { text: "  (Stop talking to execute the command)", cls: "dim" },
       ]);
       return;
@@ -941,7 +961,7 @@ export default function Terminal() {
       return;
     }
     if (resolved === "/konami") {
-      addOutput(raw, [{ text: "  🎉 Party mode!", cls: "accent" }]);
+      addOutput(raw, [{ text: "  [PARTY] Party mode!", cls: "accent" }]);
       startConfetti();
       return;
     }
@@ -950,7 +970,7 @@ export default function Terminal() {
       const duration = Math.floor((now - sessionStartRef.current) / 1000);
       const minutes = Math.floor(duration / 60);
       const seconds = duration % 60;
-      
+
       const stats = {
         totalCommands: cmdCount,
         historyCount: history.length,
@@ -958,10 +978,14 @@ export default function Terminal() {
         sessionStart: sessionStartRef.current.toLocaleTimeString(),
         sessionDuration: `${minutes}m ${seconds}s`,
         aiMessages: aiConversation.length,
-        storedCommands: Object.keys(COMMANDS).length + Object.keys(INFO_COMMANDS).length + Object.keys(PROJECT_COMMANDS).length,
-        portfolioSize: PROJECTS.length + CLIENTS.length + SKILLS.length + TOOLS.length,
+        storedCommands:
+          Object.keys(COMMANDS).length +
+          Object.keys(INFO_COMMANDS).length +
+          Object.keys(PROJECT_COMMANDS).length,
+        portfolioSize:
+          PROJECTS.length + CLIENTS.length + SKILLS.length + TOOLS.length,
       };
-      
+
       addOutput(raw, buildStats(stats));
       return;
     }
@@ -1036,9 +1060,7 @@ export default function Terminal() {
     // Unknown command
     const allCmds = getAllCmds();
     const suggestion = findSuggestion(cmd, allCmds);
-    const output = [
-      { text: `  command not found: ${cmd}`, cls: "red" },
-    ];
+    const output = [{ text: `  command not found: ${cmd}`, cls: "red" }];
     if (suggestion) {
       output.push({ text: `  Did you mean: ${suggestion}?`, cls: "yellow" });
     }
@@ -1066,7 +1088,10 @@ export default function Terminal() {
         setKonamiIdx(0);
         startConfetti();
         addOutput("/konami", [
-          { text: "  🎉 KONAMI CODE! Party mode activated!", cls: "accent" },
+          {
+            text: "  [KONAMI] CODE ACTIVATED! Party mode engaged!",
+            cls: "accent",
+          },
         ]);
       } else {
         setKonamiIdx(next);
@@ -1173,10 +1198,12 @@ export default function Terminal() {
   function handleInputChange(e) {
     const val = e.target.value;
     setInputValue(val);
-    
+
     if (historySearchMode) {
       // Filter history search results
-      const results = history.filter(h => h.toLowerCase().includes(val.toLowerCase()));
+      const results = history.filter((h) =>
+        h.toLowerCase().includes(val.toLowerCase()),
+      );
       setHistorySearchResults(results);
       setHistorySearchTerm(val);
     } else {
@@ -1437,9 +1464,9 @@ export default function Terminal() {
             className="minimized-card"
             onClick={() => setTerminalState("normal")}
           >
-            <img 
-              src={pfp} 
-              alt={OWNER.name} 
+            <img
+              src={pfp}
+              alt={OWNER.name}
               className="minimized-pfp"
               loading="lazy"
               decoding="async"
@@ -1632,8 +1659,14 @@ export default function Terminal() {
               )}
               {historySearchMode && (
                 <div className="autocomplete show">
-                  <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border)', color: 'var(--accent)' }}>
-                    🔍 History Search: {historySearchTerm || "(all)"}
+                  <div
+                    style={{
+                      padding: "8px 12px",
+                      borderBottom: "1px solid var(--border)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    History Search: {historySearchTerm || "(all)"}
                   </div>
                   {historySearchResults.length > 0 ? (
                     historySearchResults.slice(0, 8).map((item, idx) => (
@@ -1651,7 +1684,9 @@ export default function Terminal() {
                       </div>
                     ))
                   ) : (
-                    <div style={{ padding: '8px 12px', color: 'var(--dim)' }}>No matches in history</div>
+                    <div style={{ padding: "8px 12px", color: "var(--dim)" }}>
+                      No matches in history
+                    </div>
                   )}
                 </div>
               )}
@@ -1663,14 +1698,20 @@ export default function Terminal() {
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                placeholder={historySearchMode ? 'Search history (Esc to cancel)...' : 'Type a command... try "/help"'}
+                placeholder={
+                  historySearchMode
+                    ? "Search history (Esc to cancel)..."
+                    : 'Type a command... try "/help"'
+                }
                 autoComplete="off"
                 spellCheck="false"
                 aria-label="Terminal command input"
                 aria-describedby="cmdHelp"
                 aria-autocomplete="list"
                 aria-controls="autocomplete-list"
-                aria-expanded={autocompleteItems.length > 0 || historySearchMode}
+                aria-expanded={
+                  autocompleteItems.length > 0 || historySearchMode
+                }
               />
               {autocompleteItems.length > 0 && (
                 <div id="autocomplete-list" role="listbox">

@@ -1,60 +1,60 @@
 export const ACHIEVEMENTS = {
   'first_command': {
-    name: '🚀 First Steps',
+    name: '[*] First Steps',
     desc: 'Run your first command',
-    icon: '🚀'
+    icon: '**'
   },
   'explorer': {
-    name: '🔍 Explorer',
+    name: '[?] Explorer',
     desc: 'Run 10 different commands',
-    icon: '🔍',
+    icon: '?',
     condition: (cmdCount, cmdCountsObj) => Object.keys(cmdCountsObj).length >= 10
   },
   'power_user': {
-    name: '⚡ Power User',
+    name: '[!] Power User',
     desc: 'Run 50 total commands',
-    icon: '⚡',
+    icon: '!',
     condition: (cmdCount) => cmdCount >= 50
   },
   'ai_master': {
-    name: '🤖 AI Master',
+    name: '[AI] AI Master',
     desc: 'Have 10 AI chat exchanges',
-    icon: '🤖',
+    icon: 'AI',
     condition: (cmdCount, cmdCountsObj, aiConversation) => aiConversation.length >= 20
   },
   'shortcut_pro': {
-    name: '⌨️ Shortcut Pro',
+    name: '[KB] Shortcut Pro',
     desc: 'Use /shortcuts command',
-    icon: '⌨️'
+    icon: 'KB'
   },
   'theme_collector': {
-    name: '🎨 Theme Collector',
+    name: '[TH] Theme Collector',
     desc: 'Switch to all 4 themes',
-    icon: '🎨',
+    icon: 'TH',
     condition: (cmdCount, cmdCountsObj) => {
       const themeCmds = ['/dark', '/light', '/retro', '/glass'];
       return themeCmds.every(cmd => cmdCountsObj[cmd] && cmdCountsObj[cmd] > 0);
     }
   },
   'voice_warrior': {
-    name: '🎤 Voice Warrior',
+    name: '[VOX] Voice Warrior',
     desc: 'Use /voice command',
-    icon: '🎤'
+    icon: 'VOX'
   },
   'historian': {
-    name: '📜 Historian',
+    name: '[HX] Historian',
     desc: 'Use Ctrl+R history search',
-    icon: '📜'
+    icon: 'HX'
   },
   'konami_master': {
-    name: '🎮 Konami Master',
+    name: '[>>] Konami Master',
     desc: 'Trigger the Konami code',
-    icon: '🎮'
+    icon: '>>'
   },
   'coffee_lover': {
-    name: '☕ Coffee Lover',
+    name: '[>>] Coffee Lover',
     desc: 'Check the coffee status',
-    icon: '☕'
+    icon: 'C'
   },
 };
 
