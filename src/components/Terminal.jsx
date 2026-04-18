@@ -42,6 +42,8 @@ import {
 } from "../data/commands.js";
 import { buildStats } from "../data/stats-builder.js";
 import { checkAchievements, getAchievementDisplay } from "../data/achievements.js";
+import { buildRegedit, buildDeveloperMode } from "../data/easter-eggs.js";
+import { buildQRCodeSimple } from "../data/qr-code-builder.js";
 
 // ================================================================
 // THEMES
@@ -924,12 +926,18 @@ export default function Terminal() {
       return;
     }
     if (resolved === "/matrix") {
-      addOutput(raw, buildMatrix());
-      startMatrix();
+      (async () => {
+        const result = await buildMatrix();
+        addOutput(raw, result);
+        startMatrix();
+      })();
       return;
     }
     if (resolved === "/coffee") {
-      addOutput(raw, buildCoffee());
+      (async () => {
+        const result = await buildCoffee();
+        addOutput(raw, result);
+      })();
       return;
     }
     if (resolved === "/konami") {
@@ -955,6 +963,18 @@ export default function Terminal() {
       };
       
       addOutput(raw, buildStats(stats));
+      return;
+    }
+    if (resolved === "/regedit") {
+      addOutput(raw, buildRegedit());
+      return;
+    }
+    if (resolved === "/devmode") {
+      addOutput(raw, buildDeveloperMode());
+      return;
+    }
+    if (resolved === "/qrcode") {
+      addOutput(raw, buildQRCodeSimple());
       return;
     }
 
@@ -1417,7 +1437,13 @@ export default function Terminal() {
             className="minimized-card"
             onClick={() => setTerminalState("normal")}
           >
-            <img src={pfp} alt={OWNER.name} className="minimized-pfp" />
+            <img 
+              src={pfp} 
+              alt={OWNER.name} 
+              className="minimized-pfp"
+              loading="lazy"
+              decoding="async"
+            />
             <div className="minimized-card-text">
               <div className="minimized-card-heading">
                 You're really curious, aren't you?
@@ -1469,7 +1495,11 @@ export default function Terminal() {
             id="terminalBody"
             ref={bodyRef}
             onClick={() => inputRef.current?.focus()}
+            role="main"
           >
+            <a href="#cmdInput" className="sr-only focus-visible">
+              Skip to command input
+            </a>
             <h1 className="sr-only">
               {OWNER.name} — Developer & Creator Portfolio
             </h1>
@@ -1637,7 +1667,20 @@ export default function Terminal() {
                 autoComplete="off"
                 spellCheck="false"
                 aria-label="Terminal command input"
+                aria-describedby="cmdHelp"
+                aria-autocomplete="list"
+                aria-controls="autocomplete-list"
+                aria-expanded={autocompleteItems.length > 0 || historySearchMode}
               />
+              {autocompleteItems.length > 0 && (
+                <div id="autocomplete-list" role="listbox">
+                  {autocompleteItems.map((item) => (
+                    <div key={item} role="option" aria-selected={false}>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </form>
         )}

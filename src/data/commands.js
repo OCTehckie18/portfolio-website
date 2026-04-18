@@ -22,6 +22,9 @@ export const COMMANDS = {
   '/aichat_off': { desc: 'Toggle AI chat mode off' },
   '/voice': { desc: 'Start voice command input' },
   '/stats': { desc: 'View analytics & command usage stats' },
+  '/regedit': { desc: 'Windows Registry viewer (haha)' },
+  '/devmode': { desc: 'Developer mode with jokes' },
+  '/qrcode': { desc: 'Generate QR code for portfolio sharing' },
   '/clear': { desc: 'Clear the terminal' },
 };
 
@@ -355,23 +358,15 @@ export function buildSecrets() {
   ];
 }
 
-export function buildMatrix() {
-  return [
-    { text: '  Entering the Matrix...', cls: 'green' },
-    { text: '  There is no spoon. Only good code.', cls: 'dim' },
-  ];
+// These are lazy-loaded to reduce initial bundle size
+export async function buildMatrix() {
+  const { buildMatrix: buildMatrixImpl } = await import('./heavy-builders.js');
+  return buildMatrixImpl();
 }
 
-export function buildCoffee() {
-  return [
-    { text: 'Fuel Status', cls: 'heading' },
-    { text: '' },
-    { text: '  ☕ Coffee: CRITICAL — reserves below 20%', cls: 'red' },
-    { text: '  💡 Focus: OPTIMAL — 4h deep work streak', cls: 'green' },
-    { text: '  🎵 Music: lo-fi hip hop — beats to code to', cls: 'cyan' },
-    { text: '' },
-    { text: '  Warning: Do not approach before first coffee.', cls: 'yellow' },
-  ];
+export async function buildCoffee() {
+  const { buildCoffee: buildCoffeeImpl } = await import('./heavy-builders.js');
+  return buildCoffeeImpl();
 }
 
 export function buildLs() {
