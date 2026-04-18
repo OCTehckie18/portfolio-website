@@ -106,6 +106,54 @@ export const PROJECTS = [
   },
 ];
 
+export const FEATURES = [
+  {
+    category: 'Performance & Architecture',
+    items: [
+      { title: 'Code Splitting & Lazy Loading', desc: 'Dynamic imports for Matrix and Coffee builders reduce initial bundle size' },
+      { title: 'Service Worker Caching', desc: 'Multi-layer caching strategy (static/dynamic/images) with intelligent stale-while-revalidate' },
+      { title: 'Image Optimization', desc: 'Lazy loading with async decoding and progressive image rendering' },
+      { title: 'Progressive Web App (PWA)', desc: 'Offline-first architecture with manifest, service worker, and app installation support' },
+    ],
+  },
+  {
+    category: 'User Experience & Accessibility',
+    items: [
+      { title: 'Keyboard Shortcuts', desc: 'Comprehensive command reference with /shortcuts guide (Ctrl+K to open)' },
+      { title: 'Smart Typo Suggestions', desc: 'Levenshtein distance fuzzy matching for command suggestions and error recovery' },
+      { title: 'Command History Search', desc: 'Bash-like Ctrl+R history search with real-time filtering and navigation' },
+      { title: 'Copy-to-Clipboard', desc: 'One-click contact info copying with visual feedback for email and phone' },
+      { title: 'Full Accessibility Support', desc: 'WCAG compliance with ARIA labels, semantic HTML, keyboard-only navigation, focus styles' },
+    ],
+  },
+  {
+    category: 'AI & Intelligent Features',
+    items: [
+      { title: 'AI Chat with Context Memory', desc: 'Multi-turn conversations with 4-message history context for intelligent responses' },
+      { title: 'Voice Command Input', desc: 'Web Speech API integration for hands-free voice-to-command recognition' },
+      { title: 'Analytics Dashboard', desc: '/stats command displays session metrics, command usage, and engagement analytics' },
+    ],
+  },
+  {
+    category: 'Engagement & Gamification',
+    items: [
+      { title: 'Achievement System', desc: '10 unlockable badges for engaging with features (first command, themes, AI chat, etc.)' },
+      { title: 'Easter Eggs', desc: '/regedit Windows Registry parody and /devmode with developer humor' },
+      { title: 'QR Code Generator', desc: '/qrcode command for easy portfolio sharing via smartphone scanning' },
+      { title: 'Animated Loading States', desc: 'Braille spinner animation during AI chat responses for visual feedback' },
+    ],
+  },
+  {
+    category: 'Technical Skills Demonstrated',
+    items: [
+      { title: 'Web APIs Mastery', desc: 'Service Worker, Web Speech API, Clipboard API, History API integration' },
+      { title: 'Algorithm Implementation', desc: 'Levenshtein distance for fuzzy matching with dynamic programming optimization' },
+      { title: 'React State Management', desc: 'Complex state tracking for achievements, conversations, history search, and themes' },
+      { title: 'Performance Engineering', desc: 'Bundle optimization, lazy loading strategies, cache management, asset optimization' },
+    ],
+  },
+];
+
 export const CLIENTS = [
   'Skuix Studios', 'Alohie Lodge', 'Tutology', 'Content Bank',
 ];
