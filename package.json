@@ -1,7 +1,10 @@
 {
-  "name": "temp-app",
+  "name": "omkaar-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Interactive terminal-style portfolio of Omkaar Chakraborty - Backend & Full-Stack Engineer",
+  "author": "Omkaar Chakraborty",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -31,5 +34,22 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "vite": "^8.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OCTehckie18/portfolio-website"
+  },
+  "homepage": "https://omkaar-portfolio.vercel.app",
+  "keywords": [
+    "portfolio",
+    "developer",
+    "terminal",
+    "react",
+    "vite",
+    "backend",
+    "full-stack",
+    "java",
+    "typescript",
+    "spring-boot"
+  ]
 }

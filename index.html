@@ -3,16 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Name | Developer & Creator</title>
-    <meta name="description" content="Developer and creator building elegant, accessible web experiences. Explore my work, skills, and projects through an interactive terminal." />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Omkaar" />
+    <title>Omkaar Chakraborty | Backend & Full-Stack Engineer</title>
+    <meta
+      name="description"
+      content="Master of Computer Applications student specializing in backend development, RESTful APIs, and full-stack web applications. Interactive terminal-style portfolio showcasing Java, TypeScript, React, and Spring Boot expertise."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Your Name | Developer Portfolio" />
-    <meta property="og:description" content="Interactive terminal-style developer portfolio." />
+    <meta
+      property="og:title"
+      content="Omkaar Chakraborty | Backend & Full-Stack Engineer"
+    />
+    <meta
+      property="og:description"
+      content="Interactive terminal-style developer portfolio. Explore projects, skills, and experience in backend development, full-stack web, and Android development."
+    />
+    <meta property="og:url" content="https://omkaar-portfolio.vercel.app" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Omkaar Chakraborty | Developer Portfolio"
+    />
+    <meta
+      name="twitter:description"
+      content="Master of Computer Applications specializing in backend development, Spring Boot, and full-stack web applications."
+    />
+    <meta name="author" content="Omkaar Chakraborty" />
+    <meta
+      name="keywords"
+      content="backend developer, full-stack engineer, Java, TypeScript, React, Spring Boot, REST APIs, Android"
+    />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Register service worker for offline support and caching
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      }
+    </script>
   </body>
 </html>

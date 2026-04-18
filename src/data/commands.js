@@ -17,8 +17,11 @@ export const COMMANDS = {
   '/articles': { desc: 'Published articles & guides' },
   '/testimonials': { desc: 'What people say about me' },
   '/contact': { desc: 'Get in touch' },
+  '/shortcuts': { desc: 'Keyboard shortcuts & power moves' },
   '/aichat': { desc: 'Toggle AI chat mode (or use /aichat <question>)' },
   '/aichat_off': { desc: 'Toggle AI chat mode off' },
+  '/voice': { desc: 'Start voice command input' },
+  '/stats': { desc: 'View analytics & command usage stats' },
   '/clear': { desc: 'Clear the terminal' },
 };
 
@@ -249,20 +252,22 @@ export function buildSocial() {
 }
 
 export function buildContact() {
-  return [
-    { text: 'Get in Touch', cls: 'heading' },
-    { text: '' },
-    { text: `  ✉  ${_e}`, cls: 'accent' },
-    { text: `  📞  ${OWNER.phone}`, cls: 'blue' },
-    { text: `  📍  ${OWNER.location}`, cls: 'purple' },
-    { text: '' },
-    { text: '  Open to: full-time roles, contract work, consulting, open-source collaborations.' },
-    { text: '' },
-    { text: '  Let\'s build something that matters.', cls: 'accent' },
-    { text: '' },
-    { text: '  → /social for all my profiles', cls: 'dim' },
-    { text: '  // or just: sudo hire me', cls: 'dim', style: 'opacity:0.4' },
-  ];
+  const container = document.createElement('div');
+  container.innerHTML = `
+    <div class="output-line heading">Get in Touch</div>
+    <div style="height:12px"></div>
+    <div class="output-line">✉  ${_e} <button onclick="navigator.clipboard.writeText('${_e}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--accent); cursor:pointer; font-size:0.8em">Copy</button></div>
+    <div class="output-line">📞  ${OWNER.phone} <button onclick="navigator.clipboard.writeText('${OWNER.phone}'); alert('Copied!')" style="margin-left:12px; padding:2px 6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--blue); cursor:pointer; font-size:0.8em">Copy</button></div>
+    <div class="output-line">📍  ${OWNER.location}</div>
+    <div style="height:12px"></div>
+    <div class="output-line">  Open to: full-time roles, contract work, consulting, open-source collaborations.</div>
+    <div style="height:12px"></div>
+    <div class="output-line accent">  Let's build something that matters.</div>
+    <div style="height:12px"></div>
+    <div class="output-line dim">  → /social for all my profiles</div>
+    <div class="output-line dim" style="opacity:0.4">  // or just: sudo hire me</div>
+  `;
+  return container;
 }
 
 export function buildTestimonials() {
@@ -469,3 +474,35 @@ export const BOOT_LINES = [
   { text: ' — ready.\n', delay: 200, append: true },
   { text: 'Press Enter to continue...', delay: 100 },
 ];
+
+export function buildShortcuts() {
+  return [
+    { text: 'Keyboard Shortcuts & Power Moves', cls: 'heading' },
+    { text: '' },
+    { text: 'Navigation', cls: 'heading' },
+    { html: '  <span class="cmd-name">↑/↓</span> <span class="cmd-desc">Browse command history</span>' },
+    { html: '  <span class="cmd-name">Tab</span> <span class="cmd-desc">Autocomplete commands</span>' },
+    { html: '  <span class="cmd-name">Enter</span> <span class="cmd-desc">Execute command</span>' },
+    { text: '' },
+    { text: 'Editing', cls: 'heading' },
+    { html: '  <span class="cmd-name">Ctrl+L</span> <span class="cmd-desc">Clear terminal</span>' },
+    { html: '  <span class="cmd-name">Ctrl+R</span> <span class="cmd-desc">Search command history (coming soon)</span>' },
+    { html: '  <span class="cmd-name">Ctrl+U</span> <span class="cmd-desc">Clear input line</span>' },
+    { text: '' },
+    { text: 'Themes', cls: 'heading' },
+    { html: '  <span class="cmd-name">/dark</span> <span class="cmd-desc">Dark mode (default)</span>' },
+    { html: '  <span class="cmd-name">/light</span> <span class="cmd-desc">Light mode</span>' },
+    { html: '  <span class="cmd-name">/retro</span> <span class="cmd-desc">Retro CRT mode</span>' },
+    { html: '  <span class="cmd-name">/glass</span> <span class="cmd-desc">Glassmorphism mode</span>' },
+    { text: '' },
+    { text: 'Hidden Features', cls: 'heading' },
+    { html: '  <span class="cmd-name">ls</span> <span class="cmd-desc">Skills as Linux files</span>' },
+    { html: '  <span class="cmd-name">whoami</span> <span class="cmd-desc">Who are you?</span>' },
+    { html: '  <span class="cmd-name">ping me</span> <span class="cmd-desc">Am I available?</span>' },
+    { html: '  <span class="cmd-name">/matrix</span> <span class="cmd-desc">Enter the Matrix</span>' },
+    { html: '  <span class="cmd-name">/coffee</span> <span class="cmd-desc">Check fuel status</span>' },
+    { html: '  <span class="cmd-name">sudo hire me</span> <span class="cmd-desc">Generate offer letter</span>' },
+    { text: '' },
+    { text: 'Pro Tip: Type /secrets to discover more hidden commands!', cls: 'dim', style: 'font-style:italic' },
+  ];
+}

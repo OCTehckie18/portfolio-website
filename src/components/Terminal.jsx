@@ -10,6 +10,8 @@ import {
   TESTIMONIALS,
   ARTICLES,
 } from "../data/portfolioData.js";
+import { findSuggestion } from "../data/typo-suggestions.js";
+import { initializeVoiceCommands } from "../data/voice-commands.js";
 import pfp from "../assets/pfp.png";
 import {
   COMMANDS,
@@ -27,6 +29,7 @@ import {
   buildContact,
   buildTestimonials,
   buildArticles,
+  buildShortcuts,
   buildSecrets,
   buildMatrix,
   buildCoffee,
@@ -37,6 +40,8 @@ import {
   buildPing,
   BOOT_LINES,
 } from "../data/commands.js";
+import { buildStats } from "../data/stats-builder.js";
+import { checkAchievements, getAchievementDisplay } from "../data/achievements.js";
 
 // ================================================================
 // THEMES
@@ -221,11 +226,14 @@ export default function Terminal() {
   const [bootText, setBootText] = useState([]);
   const [waitingForEnter, setWaitingForEnter] = useState(false);
   const bootStartedRef = useRef(false);
-  const [terminalState, setTerminalState] = useState("normal"); // normal | minimized | maximized
+  const [terminalState, setTerminalState] = useState("maximized"); // normal | minimized | maximized
   const [inputValue, setInputValue] = useState("");
   const [outputBlocks, setOutputBlocks] = useState([]);
   const [history, setHistory] = useState([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
+  const [historySearchMode, setHistorySearchMode] = useState(false);
+  const [historySearchTerm, setHistorySearchTerm] = useState("");
+  const [historySearchResults, setHistorySearchResults] = useState([]);
   const [autocompleteItems, setAutocompleteItems] = useState([]);
   const [acIdx, setAcIdx] = useState(-1);
   const [showClose, setShowClose] = useState(false);
@@ -234,16 +242,22 @@ export default function Terminal() {
   const [helpCount, setHelpCount] = useState(0);
   const [konamiIdx, setKonamiIdx] = useState(0);
   const [forceScroll, setForceScroll] = useState(false);
+  const [commandCounts, setCommandCounts] = useState({}); // Track command usage
+  const [achievements, setAchievements] = useState([]); // Track earned achievements
 
   // AI chat mode state (terminal-only, no extra input field)
   const [aiMode, setAiMode] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [aiConversation, setAiConversation] = useState([]); // Track conversation context
 
   const bodyRef = useRef(null);
   const inputRef = useRef(null);
   const idleTimerRef = useRef(null);
   const idleCountRef = useRef(0);
+  const voiceRecognitionRef = useRef(null);
+  const [voiceActive, setVoiceActive] = useState(false);
+  const sessionStartRef = useRef(new Date());
 
   const KONAMI = [
     "ArrowUp",
@@ -340,6 +354,22 @@ export default function Terminal() {
       document.body.classList.remove("terminal-maximized");
     };
   }, [terminalState]);
+
+  // Check for achievement unlocks
+  useEffect(() => {
+    const newAchievements = checkAchievements(cmdCount, commandCounts, aiConversation, achievements);
+    newAchievements.forEach(achievement => {
+      if (!achievements.includes(achievement)) {
+        const display = getAchievementDisplay(achievement);
+        if (display) {
+          addSystemMessage(`  ✨ ${display.icon} ${display.name}`);
+        }
+      }
+    });
+    if (newAchievements.length > achievements.length) {
+      setAchievements(newAchievements);
+    }
+  }, [cmdCount, commandCounts, aiConversation]);
 
   // Cmd/Ctrl+K toggles AI chat mode and focuses the command input
   useEffect(() => {
@@ -450,7 +480,20 @@ export default function Terminal() {
     setAiLoading(true);
 
     const portfolioContext = buildPortfolioContext();
-    const contextualPrompt = `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}\n\nUser question: ${prompt}`;
+    
+    // Build conversation history for context
+    const conversationHistory = aiConversation.slice(-4); // Last 4 messages for context
+    const systemMessage = `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}`;
+    
+    const messages = [
+      { role: "system", content: systemMessage },
+      ...conversationHistory,
+      { role: "user", content: prompt }
+    ];
+    
+    const contextualPrompt = conversationHistory.length > 0 
+      ? messages.map(m => `${m.role}: ${m.content}`).join('\n\n')
+      : `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}\n\nUser question: ${prompt}`;
 
     const ollamaUrl =
       import.meta.env.VITE_OLLAMA_URL || "http://localhost:11434";
@@ -480,14 +523,7 @@ export default function Terminal() {
             const body = url.endsWith("/chat/completions")
               ? {
                   model: ollamaModel,
-                  messages: [
-                    {
-                      role: "system",
-                      content:
-                        "You are a friendly portfolio assistant answering from provided data.",
-                    },
-                    { role: "user", content: contextualPrompt },
-                  ],
+                  messages: messages,
                   max_tokens: 350,
                   temperature: 0.7,
                 }
@@ -547,14 +583,7 @@ export default function Terminal() {
             },
             body: JSON.stringify({
               model: "gpt-3.5-turbo",
-              messages: [
-                {
-                  role: "system",
-                  content:
-                    "You are a friendly portfolio assistant. Answer questions from a developer portfolio context.",
-                },
-                { role: "user", content: contextualPrompt },
-              ],
+              messages: messages,
               max_tokens: 350,
               temperature: 0.7,
             }),
@@ -570,6 +599,10 @@ export default function Terminal() {
         reply = data.choices?.[0]?.message?.content?.trim() || "";
       }
 
+      // Update conversation history with the exchange
+      const updatedConversation = [...aiConversation, { role: "user", content: prompt }, { role: "assistant", content: reply }];
+      setAiConversation(updatedConversation);
+      
       return reply || "No response received.";
     } catch (err) {
       const errMsg = err?.message || "Failed to contact AI provider.";
@@ -588,6 +621,13 @@ export default function Terminal() {
     const resolved = ALIASES[cmd] || cmd;
     const newCount = cmdCount + 1;
     setCmdCount(newCount);
+    
+    // Track command usage for /stats
+    setCommandCounts(prev => ({
+      ...prev,
+      [resolved]: (prev[resolved] || 0) + 1
+    }));
+    
     if (newCount === 3)
       addSystemMessage(
         "  You've run 3 commands. There are more hiding beneath the surface.",
@@ -614,7 +654,18 @@ export default function Terminal() {
         addOutput(raw, [
           { text: "  AI chat mode enabled and question sent.", cls: "accent" },
         ]);
+        // Show animated loading
+        const dots = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        let dotIdx = 0;
+        const loadingId = Date.now();
+        addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
+        const interval = setInterval(() => {
+          dotIdx = (dotIdx + 1) % dots.length;
+          addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
+        }, 100);
+        
         const aiResponse = await callOpenAI(after);
+        clearInterval(interval);
         addOutput(null, [{ text: aiResponse, cls: "green" }]);
         setForceScroll(true);
         return;
@@ -646,9 +697,18 @@ export default function Terminal() {
 
       addOutput(raw, [{ cls: "dim" }]);
 
+      // Show animated loading
+      const dots = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+      let dotIdx = 0;
+      addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
+      const interval = setInterval(() => {
+        dotIdx = (dotIdx + 1) % dots.length;
+        addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
+      }, 100);
+
       const aiResponse = await callOpenAI(raw);
+      clearInterval(interval);
       addOutput(null, [{ text: aiResponse, cls: "green" }]);
-      // setForceScroll(true);
       setForceScroll(true);
       return;
     }
@@ -682,6 +742,38 @@ export default function Terminal() {
       addOutput(raw, buildWork());
       return;
     }
+    // Handle individual project commands
+    if (PROJECT_COMMANDS[resolved]) {
+      const projectName = resolved.slice(1).replace(/-/g, " ").toLowerCase();
+      const project = PROJECTS.find(
+        (p) =>
+          p.name
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "") === resolved.slice(1),
+      );
+      if (project) {
+        const container = document.createElement("div");
+        container.innerHTML = `
+          <div class="output-line heading">${project.name}</div>
+          <div class="output-line dim">${project.type} • ${project.year}</div>
+          <div style="height:8px"></div>
+          <div class="output-line">${project.desc}</div>
+          <div style="height:12px"></div>
+          <div class="output-line dim">Tags:</div>
+          <div class="output-line">${project.tags.map((t) => `<span class="project-tag" style="display:inline-block;margin:2px 4px 2px 0;padding:4px 8px;background:rgba(255,255,255,0.1);border-radius:3px;font-size:0.8em">${t}</span>`).join("")}</div>
+          ${project.stats ? `<div style="height:12px"></div><div class="output-line dim">Stats:</div><div class="output-line">${project.stats.map((s) => `<span style="display:inline-block;margin:2px 4px 2px 0">✦ ${s}</span>`).join("")}</div>` : ""}
+          ${project.url ? `<div style="height:12px"></div><div class="output-line"><a href="${project.url}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline">→ View Project →</a></div>` : ""}
+        `;
+        addOutput(raw, container);
+      } else {
+        addOutput(raw, [
+          { text: `  command not found: ${cmd}`, cls: "red" },
+          { text: "  Type /help for available commands.", cls: "dim" },
+        ]);
+      }
+      return;
+    }
     if (resolved === "/clients") {
       addOutput(raw, buildClients());
       return;
@@ -689,6 +781,33 @@ export default function Terminal() {
     // /aichat is handled earlier in ai mode logic.
     if (resolved === "/skills") {
       addOutput(raw, buildSkills());
+      return;
+    }
+    if (resolved === "/shortcuts") {
+      addOutput(raw, buildShortcuts());
+      return;
+    }
+    if (resolved === "/voice") {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        addOutput(raw, [
+          { text: "  ❌ Voice commands not supported in your browser.", cls: "red" },
+          { text: "  Try Chrome, Edge, or Safari.", cls: "dim" },
+        ]);
+        return;
+      }
+      if (!voiceRecognitionRef.current) {
+        voiceRecognitionRef.current = initializeVoiceCommands((command) => {
+          executeCommand(command);
+          setVoiceActive(false);
+        });
+      }
+      setVoiceActive(true);
+      voiceRecognitionRef.current.start();
+      addOutput(raw, [
+        { text: "  🎤 Listening... Say a command like 'help', 'about', 'contact', etc.", cls: "accent" },
+        { text: "  (Stop talking to execute the command)", cls: "dim" },
+      ]);
       return;
     }
     if (resolved === "/philosophy") {
@@ -818,6 +937,26 @@ export default function Terminal() {
       startConfetti();
       return;
     }
+    if (resolved === "/stats") {
+      const now = new Date();
+      const duration = Math.floor((now - sessionStartRef.current) / 1000);
+      const minutes = Math.floor(duration / 60);
+      const seconds = duration % 60;
+      
+      const stats = {
+        totalCommands: cmdCount,
+        historyCount: history.length,
+        commandCounts: commandCounts,
+        sessionStart: sessionStartRef.current.toLocaleTimeString(),
+        sessionDuration: `${minutes}m ${seconds}s`,
+        aiMessages: aiConversation.length,
+        storedCommands: Object.keys(COMMANDS).length + Object.keys(INFO_COMMANDS).length + Object.keys(PROJECT_COMMANDS).length,
+        portfolioSize: PROJECTS.length + CLIENTS.length + SKILLS.length + TOOLS.length,
+      };
+      
+      addOutput(raw, buildStats(stats));
+      return;
+    }
 
     if (cmd === "ls") {
       addOutput(raw, buildLs());
@@ -875,10 +1014,16 @@ export default function Terminal() {
     }
 
     // Unknown command
-    addOutput(raw, [
+    const allCmds = getAllCmds();
+    const suggestion = findSuggestion(cmd, allCmds);
+    const output = [
       { text: `  command not found: ${cmd}`, cls: "red" },
-      { text: "  Type /help for available commands.", cls: "dim" },
-    ]);
+    ];
+    if (suggestion) {
+      output.push({ text: `  Did you mean: ${suggestion}?`, cls: "yellow" });
+    }
+    output.push({ text: "  Type /help for available commands.", cls: "dim" });
+    addOutput(raw, output);
   }
 
   async function handleSubmit(e) {
@@ -922,6 +1067,44 @@ export default function Terminal() {
     }
     if (e.key === "Escape") {
       setAutocompleteItems([]);
+      setHistorySearchMode(false);
+      setHistorySearchTerm("");
+      return;
+    }
+    if (e.ctrlKey && e.key === "r") {
+      e.preventDefault();
+      setHistorySearchMode(true);
+      setHistorySearchTerm("");
+      setHistorySearchResults(history);
+      return;
+    }
+    if (historySearchMode) {
+      if (e.key === "Escape") {
+        setHistorySearchMode(false);
+        setHistorySearchTerm("");
+        setInputValue("");
+        return;
+      }
+      if (e.key === "Enter" && historySearchResults.length > 0) {
+        setInputValue(historySearchResults[0]);
+        setHistorySearchMode(false);
+        setHistorySearchTerm("");
+        return;
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (historySearchResults.length > 0) {
+          setInputValue(historySearchResults[0]);
+        }
+        return;
+      }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (historySearchResults.length > 1) {
+          setInputValue(historySearchResults[1]);
+        }
+        return;
+      }
       return;
     }
     if (e.key === "Tab") {
@@ -970,8 +1153,16 @@ export default function Terminal() {
   function handleInputChange(e) {
     const val = e.target.value;
     setInputValue(val);
-    updateAutocomplete(val);
-    setHistoryIdx(-1);
+    
+    if (historySearchMode) {
+      // Filter history search results
+      const results = history.filter(h => h.toLowerCase().includes(val.toLowerCase()));
+      setHistorySearchResults(results);
+      setHistorySearchTerm(val);
+    } else {
+      updateAutocomplete(val);
+      setHistoryIdx(-1);
+    }
   }
 
   // ================================================================
@@ -1409,6 +1600,31 @@ export default function Terminal() {
                   ))}
                 </div>
               )}
+              {historySearchMode && (
+                <div className="autocomplete show">
+                  <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--border)', color: 'var(--accent)' }}>
+                    🔍 History Search: {historySearchTerm || "(all)"}
+                  </div>
+                  {historySearchResults.length > 0 ? (
+                    historySearchResults.slice(0, 8).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="autocomplete-item"
+                        onClick={() => {
+                          setInputValue(item);
+                          setHistorySearchMode(false);
+                          setHistorySearchTerm("");
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        <span className="ac-cmd">{item}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ padding: '8px 12px', color: 'var(--dim)' }}>No matches in history</div>
+                  )}
+                </div>
+              )}
               <input
                 ref={inputRef}
                 type="text"
@@ -1417,7 +1633,7 @@ export default function Terminal() {
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                placeholder='Type a command... try "/help"'
+                placeholder={historySearchMode ? 'Search history (Esc to cancel)...' : 'Type a command... try "/help"'}
                 autoComplete="off"
                 spellCheck="false"
                 aria-label="Terminal command input"
