@@ -8,7 +8,6 @@ import {
   SKILLS,
   TOOLS,
   TESTIMONIALS,
-  ARTICLES,
 } from "../data/portfolioData.js";
 import { findSuggestion } from "../data/typo-suggestions.js";
 import { initializeVoiceCommands } from "../data/voice-commands.js";
@@ -28,7 +27,6 @@ import {
   buildSocial,
   buildContact,
   buildTestimonials,
-  buildArticles,
   buildShortcuts,
   buildSecrets,
   buildMatrix,
@@ -482,7 +480,7 @@ export default function Terminal() {
       .map((t) => `- ${t.name} (${t.title}): ${t.quote}`)
       .join(
         "\n",
-      )}\n\nArticles:\n${ARTICLES.map((a) => `${a.cat}: ${a.items.map((i) => i.title).join("; ")}`).join("\n")}`;
+      )}`;
   }
 
   async function callOpenAI(prompt) {
@@ -848,11 +846,6 @@ export default function Terminal() {
       addOutput(raw, buildTestimonials());
       return;
     }
-    if (resolved === "/articles") {
-      addOutput(raw, buildArticles());
-      return;
-    }
-
     // Info commands
     if (resolved === "/linkedin") {
       addOutput(raw, [

@@ -183,59 +183,17 @@ export const TOOLS = [
 
 export const TESTIMONIALS = [
   {
-    name: 'Skuix Studios',
-    title: 'Content Specialist • Feb 2025 - Jun 2025',
-    relation: 'Content Metadata & Video Distribution',
-    quote: 'Optimized music content metadata for digital distribution platforms while collaborating with creative teams to develop engagement-focused content strategies.',
+    name: 'Sonali Sharma, Content Bank',
+    title: 'Video Editor • Feb 2025 - Jun 2025',
+    relation: 'Video Content Editing',
+    quote: 'Omkaar possesses a combination of high-level technical proficiency and a deep understanding of narrative structure. Over the past two years, he has consistently demonstrated the ability to interpret complex storyboards and translate them into impactful visual content. Beyond his technical skills, his reliability and professional approach make him a valuable asset to any production. I highly recommend him for any role requiring a skilled video professional with a sharp eye for detail and understanding the essence of the core requirement.',
     color: 'accent',
   },
   {
-    name: 'Academic Collaborator',
-    title: 'CodeIR Project',
-    relation: 'Co-developer & Architecture Lead',
-    quote: 'Outstanding problem-solver demonstrating exceptional technical depth in full-stack architecture. The CodeIR platform exemplifies both technical excellence and user-centric design thinking.',
+    name: 'Aditya Gaurav',
+    title: 'Content Specialist & Video Editor',
+    relation: 'CEO, SkuixStudios',
+    quote: 'I had the opportunity to work with Omkaar at SkuixStudios, where they served as a Video Editing Partner. During their time with us, Omkaar showcased a strong work ethic and a dedication to delivering results. They were involved in tasks related to video editing and music playlist building, and contributed to several key video projects. Their ability to collaborate with team members and approach tasks with a problem-solving mindset was commendable.',
     color: 'blue',
-  },
-  {
-    name: 'Alohie Lodge & Tutology',
-    title: 'Manager & Operational Trainee',
-    relation: 'Cross-functional Operations',
-    quote: 'Demonstrates strong OOP principles, clean code practices, and proven ability to manage complex operations. Reliable professional consistently delivering production-ready solutions on schedule.',
-    color: 'green',
-  },
-];
-
-export const ARTICLES = [
-  {
-    cat: 'Backend Development',
-    items: [
-      { title: 'Building Scalable REST APIs with Spring Boot and Java', url: 'https://medium.com/@omkar.chakraborty2001/building-scalable-rest-apis-with-spring-boot-java' },
-      { title: 'Object-Oriented Design Patterns for Enterprise Applications', url: 'https://medium.com/@omkar.chakraborty2001/oop-design-patterns-enterprise' },
-      { title: 'Database Optimization: SQL Best Practices for High-Performance Systems', url: 'https://medium.com/@omkar.chakraborty2001/database-optimization-sql-best-practices' },
-      { title: 'Leveraging Spring Boot for Rapid Backend Development', url: 'https://medium.com/@omkar.chakraborty2001/spring-boot-rapid-development' },
-    ],
-  },
-  {
-    cat: 'Full-Stack Web Development',
-    items: [
-      { title: 'From Frontend to Backend: Full-Stack Development with React and Spring', url: 'https://medium.com/@omkar.chakraborty2001/fullstack-react-spring-development' },
-      { title: 'Building Real-Time Collaboration Features in Web Applications', url: 'https://medium.com/@omkar.chakraborty2001/realtime-collaboration-web-apps' },
-      { title: 'TypeScript Best Practices for Scalable Web Projects', url: 'https://medium.com/@omkar.chakraborty2001/typescript-best-practices' },
-    ],
-  },
-  {
-    cat: 'Android Development',
-    items: [
-      { title: 'Android Lifecycle Management and Background Services Best Practices', url: 'https://medium.com/@omkar.chakraborty2001/android-lifecycle-background-services' },
-      { title: 'Persistent Storage with SQLite in Android Applications', url: 'https://medium.com/@omkar.chakraborty2001/android-sqlite-persistent-storage' },
-      { title: 'Building Custom UI Components for Android with Native Java', url: 'https://medium.com/@omkar.chakraborty2001/android-custom-ui-components' },
-    ],
-  },
-  {
-    cat: 'Technical Writing',
-    items: [
-      { title: 'Data Analysis with Pandas and NumPy: From Theory to Practice', url: 'https://medium.com/@omkar.chakraborty2001/pandas-numpy-data-analysis' },
-      { title: 'Agile Collaboration and Cross-Functional Team Dynamics', url: 'https://medium.com/@omkar.chakraborty2001/agile-team-dynamics' },
-    ],
   },
 ];

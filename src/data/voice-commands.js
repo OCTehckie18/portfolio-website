@@ -33,7 +33,6 @@ export function initializeVoiceCommands(onCommand) {
       'contact': '/contact',
       'contact me': '/contact',
       'social': '/social',
-      'articles': '/articles',
       'testimonials': '/testimonials',
       'philosophy': '/philosophy',
       'clients': '/clients',

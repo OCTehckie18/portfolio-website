@@ -1,4 +1,4 @@
-import { OWNER, ASCII_NAME, PROJECTS, CLIENTS, SKILLS, TOOLS, TESTIMONIALS, ARTICLES } from './portfolioData.js';
+import { OWNER, ASCII_NAME, PROJECTS, CLIENTS, SKILLS, TOOLS, TESTIMONIALS } from './portfolioData.js';
 
 // ================================================================
 // COMMAND DEFINITIONS
@@ -14,13 +14,12 @@ export const COMMANDS = {
   '/skills': { desc: 'Expertise & capabilities' },
   '/philosophy': { desc: 'My development philosophy' },
   '/social': { desc: 'Social profiles & links' },
-  '/articles': { desc: 'Published articles & guides' },
   '/testimonials': { desc: 'What people say about me' },
   '/contact': { desc: 'Get in touch' },
   '/shortcuts': { desc: 'Keyboard shortcuts & power moves' },
   '/aichat': { desc: 'Toggle AI chat mode (or use /aichat <question>)' },
   '/aichat_off': { desc: 'Toggle AI chat mode off' },
-  '/voice': { desc: 'Start voice command input' },
+  // '/voice': { desc: 'Start voice command input' },
   '/stats': { desc: 'View analytics & command usage stats' },
   '/regedit': { desc: 'Windows Registry viewer (haha)' },
   '/devmode': { desc: 'Developer mode with jokes' },
@@ -52,7 +51,6 @@ export const THEME_COMMANDS = {
 export const ALIASES = {
   '/portfolio': '/work', '/projects': '/work', '/me': '/about',
   '/hire': '/contact', '/call': '/phone', '/mail': '/email',
-  '/blog': '/articles', '/writing': '/articles',
   '/reviews': '/testimonials', '/recommendations': '/testimonials',
   '/links': '/social', '/socials': '/social',
   '/reset': '/clear', '/cls': '/clear',
@@ -295,33 +293,6 @@ export function buildTestimonials() {
   hint.style.marginTop = '12px';
   hint.innerHTML = `  → <a href="${OWNER.linkedin}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">LinkedIn</a> for all recommendations`;
   container.appendChild(hint);
-  return container;
-}
-
-export function buildArticles() {
-  const container = document.createElement('div');
-  container.innerHTML = `<div class="output-line heading">Published Articles</div>
-    <div class="output-line dim" style="margin-bottom:12px">  On code, design, and craft</div>`;
-  ARTICLES.forEach(group => {
-    const catEl = document.createElement('div');
-    catEl.className = 'output-line';
-    catEl.style.marginTop = '12px';
-    catEl.innerHTML = `<span style="text-transform:uppercase;letter-spacing:1px;font-size:0.75em;color:var(--accent)">${group.cat}</span>`;
-    container.appendChild(catEl);
-    group.items.forEach(a => {
-      const row = document.createElement('a');
-      row.href = a.url;
-      row.target = '_blank';
-      row.rel = 'noopener noreferrer';
-      row.className = 'social-link';
-      row.style.padding = '6px 12px';
-      row.innerHTML = `
-        <span class="social-name" style="flex:1">${a.title}</span>
-        <span class="social-arrow">→</span>
-      `;
-      container.appendChild(row);
-    });
-  });
   return container;
 }
 
