@@ -478,9 +478,7 @@ export default function Terminal() {
       3,
     )
       .map((t) => `- ${t.name} (${t.title}): ${t.quote}`)
-      .join(
-        "\n",
-      )}`;
+      .join("\n")}`;
   }
 
   async function callOpenAI(prompt) {
@@ -499,113 +497,44 @@ export default function Terminal() {
       { role: "user", content: prompt },
     ];
 
-    const contextualPrompt =
-      conversationHistory.length > 0
-        ? messages.map((m) => `${m.role}: ${m.content}`).join("\n\n")
-        : `You are Omkaar, the portfolio owner and developer. Answer as Omkaar would, in first-person, with his tone and perspective. Use the portfolio data to provide accurate, concise responses and avoid generic AI disclaimers.\n\n${portfolioContext}\n\nUser question: ${prompt}`;
-
-    const ollamaUrl =
-      import.meta.env.VITE_OLLAMA_URL || "http://localhost:11434";
-    const ollamaModel = import.meta.env.VITE_OLLAMA_MODEL || "qwen2.5-coder:7b";
-    const openaiKey = import.meta.env.VITE_OPENAI_KEY;
+    const groqKey = import.meta.env.VITE_GROQ_KEY;
 
     try {
-      if (!ollamaUrl && !openaiKey) {
+      if (!groqKey) {
         throw new Error(
-          "No AI provider configured. Set VITE_OLLAMA_URL or VITE_OPENAI_KEY.",
+          "Groq API key not configured. Set VITE_GROQ_KEY environment variable.",
         );
       }
 
       let reply = "";
 
-      if (ollamaUrl) {
-        const normalizedUrl = ollamaUrl.replace(/\/+$|\s+/g, "");
-        const endpoints = [
-          `${normalizedUrl}/api/models/${ollamaModel}/generate`,
-          `${normalizedUrl}/v1/models/${ollamaModel}/generate`,
-          `${normalizedUrl}/v1/chat/completions`,
-        ];
-
-        let lastError = null;
-        for (const url of endpoints) {
-          try {
-            const body = url.endsWith("/chat/completions")
-              ? {
-                  model: ollamaModel,
-                  messages: messages,
-                  max_tokens: 350,
-                  temperature: 0.7,
-                }
-              : {
-                  prompt: contextualPrompt,
-                  max_tokens: 350,
-                  temperature: 0.7,
-                  stream: false,
-                };
-
-            const response = await fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
-
-            if (!response.ok) {
-              const errText = await response.text();
-              throw new Error(`Ollama error ${response.status}: ${errText}`);
-            }
-
-            const data = await response.json();
-            reply =
-              data?.results?.[0]?.output?.trim() ||
-              data?.results?.[0]?.output?.[0]?.content?.trim() ||
-              data?.text?.trim() ||
-              data?.choices?.[0]?.message?.content?.trim() ||
-              (data?.output && Array.isArray(data.output)
-                ? data.output.join("\n")
-                : "") ||
-              "";
-
-            if (reply) {
-              break;
-            }
-          } catch (err) {
-            lastError = err;
-          }
-        }
-
-        if (!reply) {
-          throw (
-            lastError ||
-            new Error("Ollama returned no response from any endpoint.")
-          );
-        }
-      } else if (openaiKey) {
-        const response = await fetch(
-          "https://api.openai.com/v1/chat/completions",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${openaiKey}`,
-            },
-            body: JSON.stringify({
-              model: "gpt-3.5-turbo",
-              messages: messages,
-              max_tokens: 350,
-              temperature: 0.7,
-            }),
+      const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${groqKey}`,
           },
-        );
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: messages,
+            max_tokens: 350,
+            temperature: 0.7,
+          }),
+        },
+      );
 
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(`OpenAI error ${response.status}: ${errText}`);
-        }
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Groq API error ${response.status}: ${errText}`);
+      }
 
-        const data = await response.json();
-        reply = data.choices?.[0]?.message?.content?.trim() || "";
+      const data = await response.json();
+      reply = data.choices?.[0]?.message?.content?.trim() || "";
+
+      if (!reply) {
+        throw new Error("Groq API returned no response.");
       }
 
       // Update conversation history with the exchange
@@ -671,10 +600,11 @@ export default function Terminal() {
         const dots = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
         let dotIdx = 0;
         const loadingId = Date.now();
-        addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
+        // Thinking loop disabled
+        // addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
         const interval = setInterval(() => {
           dotIdx = (dotIdx + 1) % dots.length;
-          addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
+          // addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
         }, 100);
 
         const aiResponse = await callOpenAI(after);
@@ -713,10 +643,11 @@ export default function Terminal() {
       // Show animated loading
       const dots = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
       let dotIdx = 0;
-      addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
+      // Thinking loop disabled
+      // addOutput(null, [{ text: `  Thinking ${dots[0]}`, cls: "dim" }]);
       const interval = setInterval(() => {
         dotIdx = (dotIdx + 1) % dots.length;
-        addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
+        // addOutput(null, [{ text: `  Thinking ${dots[dotIdx]}`, cls: "dim" }]);
       }, 100);
 
       const aiResponse = await callOpenAI(raw);
