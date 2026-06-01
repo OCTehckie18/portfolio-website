@@ -79,16 +79,17 @@ NNd..''''''..'''....      ........''.......','',ll;;::,,,'......................
 export const PROJECTS = [
   {
     name: 'CodeIR Web Application',
-    year: '2025',
+    year: '2026',
     type: 'Full-Stack Web Development | React TypeScript',
     desc: 'Engineered a browser-based coding practice platform supporting structured learning paths. Designed interactive web interface enabling real-time instructor-student collaboration. Optimized frontend for accessibility and performance with modular component architecture achieving lightweight load times.',
     tags: ['TypeScript', 'React', 'Full-Stack', 'Real-time'],
     stats: ['Interactive Learning Interface', 'Real-time Collaboration', 'Modular Architecture'],
     url: 'https://codeir.vercel.app',
+    // if not a github link, it must say View on Browser instead of Github
   },
   {
     name: 'VOID Music Player',
-    year: '2024',
+    year: '2026',
     type: 'Android Native Application | Java',
     desc: 'Native Android music player with custom UI and local media playback engine. Integrated SQLite for persistent playlist storage and playback history. Applied Android lifecycle management and background service patterns for uninterrupted audio playback.',
     tags: ['Java', 'Android', 'SQLite', 'Native'],
@@ -98,11 +99,20 @@ export const PROJECTS = [
   {
     name: 'Portfolio Terminal',
     year: '2026',
-    type: 'Interactive Portfolio | React Vite',
+    type: 'Interactive Portfolio | React Vite JavaScript TailwindCSS',
     desc: 'A fully interactive terminal-style portfolio experience with theme switching, command execution, Easter eggs and dynamic routing. Built with modern tooling for optimal performance and developer experience.',
     tags: ['React', 'Vite', 'Tailwind CSS', 'Interactive'],
     stats: ['4 Themes', '30+ Commands', 'Real-time Performance'],
     url: 'https://github.com/OCTehckie18/portfolio-website',
+  },
+  {
+    name: 'EduAI Suite',
+    year: '2026',
+    type: 'Interactive Student-Teacher Suite | React-Vite-TypeScript FastAPI',
+    desc: 'A defined way of Student-Teacher Interaction Suite with AI Integration and game designs for one-campus moduled academic methods',
+    tags: ['React', 'Vite', 'Tailwind CSS', 'FastAPI', 'SQLite', 'TypeScript'],
+    stats: ['Academia Collaboration', 'Supportive Dashboards', 'Real-time Appointment Booking', 'AI-Integrated'],
+    // url: 'https://github.com/OCTehckie18/portfolio-website',
   },
 ];
 
@@ -131,7 +141,7 @@ export const FEATURES = [
     items: [
       { title: 'AI Chat with Context Memory', desc: 'Multi-turn conversations with 4-message history context for intelligent responses' },
       { title: 'Voice Command Input', desc: 'Web Speech API integration for hands-free voice-to-command recognition' },
-      { title: 'Analytics Dashboard', desc: '/stats command displays session metrics, command usage, and engagement analytics' },
+      // { title: 'Analytics Dashboard', desc: '/stats command displays session metrics, command usage, and engagement analytics' },
     ],
   },
   {
@@ -159,20 +169,20 @@ export const CLIENTS = [
 ];
 
 export const SKILLS = [
-  { name: 'Java', pct: 77, color: 'accent' },
   { name: 'TypeScript', pct: 75, color: 'accent' },
-  { name: 'Python', pct: 73, color: 'green' },
   { name: 'React', pct: 73, color: 'green' },
-  { name: 'Spring Boot', pct: 75, color: 'blue' },
   { name: 'REST APIs', pct: 77, color: 'blue' },
   { name: 'MySQL / SQLite', pct: 70, color: 'purple' },
-  { name: 'Android Development', pct: 73, color: 'purple' },
-  { name: 'Object-Oriented Design', pct: 77, color: 'accent' },
-  { name: 'C / C++', pct: 65, color: 'cyan' },
+  // { name: 'Python', pct: 73, color: 'green' },
+  // { name: 'Data Analysis (Pandas/NumPy)', pct: 67, color: 'green' },
+  { name: 'Java', pct: 77, color: 'accent' },
+  { name: 'Spring Boot', pct: 60, color: 'blue' },
+  { name: 'C / C++', pct: 79, color: 'cyan' },
+  { name: 'Kotlin', pct: 72, color: 'green' },
+  { name: 'Android Development', pct: 72, color: 'purple' },
   { name: 'Git & Version Control', pct: 75, color: 'cyan' },
-  { name: 'Kotlin', pct: 60, color: 'green' },
-  { name: 'Data Analysis (Pandas/NumPy)', pct: 67, color: 'green' },
-  { name: 'Agile Collaboration', pct: 73, color: 'accent' },
+  { name: 'JavaScript', pct: 72, color: 'green' },
+  // { name: 'Agile Collaboration', pct: 73, color: 'accent' },
 ];
 
 export const TOOLS = [
@@ -184,7 +194,7 @@ export const TOOLS = [
 export const TESTIMONIALS = [
   {
     name: 'Sonali Sharma, Content Bank',
-    title: 'Video Editor • Feb 2025 - Jun 2025',
+    title: 'Video Editor',
     relation: 'Video Content Editing',
     quote: 'Omkaar possesses a combination of high-level technical proficiency and a deep understanding of narrative structure. Over the past two years, he has consistently demonstrated the ability to interpret complex storyboards and translate them into impactful visual content. Beyond his technical skills, his reliability and professional approach make him a valuable asset to any production. I highly recommend him for any role requiring a skilled video professional with a sharp eye for detail and understanding the essence of the core requirement.',
     color: 'accent',
