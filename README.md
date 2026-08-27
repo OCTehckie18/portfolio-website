@@ -26,6 +26,13 @@ npm install
 npm run dev
 ```
 
+To enable the AI terminal responses, set:
+
+```bash
+VITE_GROQ_KEY=your_groq_api_key
+VITE_GROQ_MODEL=openai/gpt-oss-20b
+```
+
 ## Scripts
 
 - `npm run dev` - start the development server

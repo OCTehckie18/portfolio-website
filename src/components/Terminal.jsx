@@ -498,6 +498,7 @@ export default function Terminal() {
     ];
 
     const groqKey = import.meta.env.VITE_GROQ_KEY;
+    const groqModel = import.meta.env.VITE_GROQ_MODEL || "openai/gpt-oss-20b";
 
     try {
       if (!groqKey) {
@@ -517,7 +518,7 @@ export default function Terminal() {
             Authorization: `Bearer ${groqKey}`,
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: groqModel,
             messages: messages,
             max_tokens: 350,
             temperature: 0.7,
